@@ -30,3 +30,4 @@ fetch("http://localhost:3000/api/products")
   .catch(function(err) {
     // Une erreur est survenue
   });
+// rajouter fonction

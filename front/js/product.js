@@ -1,5 +1,4 @@
 id = window.location.href.split('id=')[1]
-console.log(id);
 
 fetch("http://localhost:3000/api/products/" + id)
   .then(function(res) {
@@ -8,7 +7,6 @@ fetch("http://localhost:3000/api/products/" + id)
     }
   })
   .then(function(value) {
-    console.log(value);
     var item_img = document.querySelector(".item__img");
     var img = document.createElement("img");
     var title = document.querySelector("#title");
@@ -31,3 +29,4 @@ fetch("http://localhost:3000/api/products/" + id)
   .catch(function(err) {
     // Une erreur est survenue
   });
+// rajouter fonction
