@@ -32,24 +32,64 @@ products.forEach((product) => {
 		  <div class='cart__item__content__settings'>
 		    <div class='cart__item__content__settings__quantity'>
 		      <p>Qté : </p>
-		      <input type='number' class='itemQuantity' name='itemQuantity' min='1' max='100' value='${product.quantity}'>
+		      <input type='number' class='itemQuantity' name='itemQuantity' min='1' max='100' value='${product.quantity}' onchange='actualisationValues()'>
 		    </div>
 		    <div class='cart__item__content__settings__delete'>
-		      <p class='deleteItem'>Supprimer</p>
+		      <p class='deleteItem' onclick='deleteProduct(this)'>Supprimer</p>
 		    </div>
 		  </div>
 		</div>`
 		// ajout de l'article dans la div cart__items
 		cart__items.appendChild(cart__item)
-	    sumPrice = sumPrice + (parseInt(value.price) * product.quantity)
+		displayTotalPrice(value.price, product.quantity)
     });
     sumQuantity = sumQuantity + product.quantity
-    // mettre value.price pas product.price
-    console.log(product.price)
-    // getTotal()
 });
 totalQuantity.innerText = sumQuantity;
-totalPrice.innerText = sumPrice;
+
+function displayTotalPrice(valuePrice, productQuantity) {
+    sumPrice = sumPrice + valuePrice * productQuantity
+	totalPrice.innerText = sumPrice;
+    return sumPrice;
+}
+
+function actualisationValues() {
+	// Calcul du total (récuperation de tout les prix)
+	let totalQuantity = document.querySelector("#totalQuantity");
+	let totalPrice = document.querySelector("#totalPrice");
+	let selectQuantitys = document.querySelectorAll(".itemQuantity")
+	sumQuantity = 0;
+	sumPrice = 0;
+	selectQuantitys.forEach((selectQuantity) => {
+		article = selectQuantity.parentNode.parentNode.parentNode.parentNode
+		let id = article.dataset.id
+
+		  fetch("http://localhost:3000/api/products/" + id)
+		    .then(function(res) {
+		      if (res.ok) {
+		        return res.json();
+		      }
+		    })
+		    .then(function(value) {
+		    	displayTotalPrice(value.price, selectQuantity.value)
+		    });
+
+		sumQuantity = sumQuantity + parseInt(selectQuantity.value)
+	})
+	totalQuantity.innerText = sumQuantity
+}
+
+function deleteProduct(element) {
+	article = element.parentNode.parentNode.parentNode.parentNode
+	console.log(article)
+	product = {id: article.dataset.id, color: article.dataset.color}
+	removeToCart(product)
+	// location.href = window.location.href
+}
+
+function saveCart(cart) {
+  localStorage.setItem("products", JSON.stringify(cart));
+}
 
 function getCart() {
   let cart = localStorage.getItem("products");
@@ -60,16 +100,14 @@ function getCart() {
   }
 }
 
-function getTotal() {
-	// Calcul du total (récuperation de tout les prix et multiplication par leur quantité)
-	let totalQuantity = document.querySelector("#totalQuantity");
-	let totalPrice = document.querySelector("#totalPrice");
-
+function removeToCart(product) {
+  let cart = getCart();
+  cart = cart.filter(p => p.id != product.id && p.color != product.color);
+  saveCart();
 }
 
 
 
-
-
-
+// comment faire un addeventlistener sur tout les select et tout les btn delete ?
+// les div ne sont pas visible par la js
 
