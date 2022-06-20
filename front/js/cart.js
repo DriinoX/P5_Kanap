@@ -84,7 +84,7 @@ function deleteProduct(element) {
 	console.log(article)
 	product = {id: article.dataset.id, color: article.dataset.color}
 	removeToCart(product)
-	// location.href = window.location.href
+	location.href = window.location.href
 }
 
 function saveCart(cart) {
@@ -93,7 +93,7 @@ function saveCart(cart) {
 
 function getCart() {
   let cart = localStorage.getItem("products");
-  if (cart == null) {
+  if (cart == null || cart == 'undefined') {
     return [];
   } else {
     return JSON.parse(cart);

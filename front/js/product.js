@@ -60,7 +60,7 @@ function saveCart(cart) {
 
 function getCart() {
   let cart = localStorage.getItem("products");
-  if (cart == null) {
+  if (cart == null || cart == 'undefined') {
     return [];
   } else {
     return JSON.parse(cart);
