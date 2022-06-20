@@ -6,12 +6,12 @@ fetch("http://localhost:3000/api/products")
   })
   .then(function(value) {
     for (let i = 0; i < value.length; i++) {
-    var items = document.querySelector("#items");
-    var a = document.createElement("a");
-    var article = document.createElement("article");
-    var img = document.createElement("img");
-    var h3 = document.createElement("h3");
-    var p = document.createElement("p");
+    let items = document.querySelector("#items");
+    let a = document.createElement("a");
+    let article = document.createElement("article");
+    let img = document.createElement("img");
+    let h3 = document.createElement("h3");
+    let p = document.createElement("p");
     a.appendChild(article);
     a.setAttribute('href', './product.html?id=' + value[i]._id);
     article.appendChild(img);
@@ -24,7 +24,7 @@ fetch("http://localhost:3000/api/products")
     p.setAttribute('class', 'productDescription');
     p.innerText = value[i].description;
     items.appendChild(a);
-    var productName = document.querySelector(".productName");
+    let productName = document.querySelector(".productName");
     }
   })
   .catch(function(err) {

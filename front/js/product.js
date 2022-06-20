@@ -1,4 +1,7 @@
 id = window.location.href.split('id=')[1]
+let color = document.querySelector("#colors");
+let quantity = document.querySelector("#quantity");
+
 
 fetch("http://localhost:3000/api/products/" + id)
   .then(function(res) {
@@ -7,12 +10,11 @@ fetch("http://localhost:3000/api/products/" + id)
     }
   })
   .then(function(value) {
-    var item_img = document.querySelector(".item__img");
-    var img = document.createElement("img");
-    var title = document.querySelector("#title");
-    var price = document.querySelector("#price");
-    var description = document.querySelector("#description");
-    var color = document.querySelector("#colors");
+    let item_img = document.querySelector(".item__img");
+    let img = document.createElement("img");
+    let title = document.querySelector("#title");
+    let price = document.querySelector("#price");
+    let description = document.querySelector("#description");
     item_img.appendChild(img);
     img.setAttribute('src',value.imageUrl);
     img.setAttribute('alt', value.altTxt);
@@ -20,7 +22,7 @@ fetch("http://localhost:3000/api/products/" + id)
     price.innerText = value.price;
     description.innerText = value.description;
     for (let i = 0; i < value.colors.length; i++) {
-    	var option = document.createElement("option");
+    	let option = document.createElement("option");
     	option.setAttribute('value', value.colors[i]);
     	option.innerText = value.colors[i];
 	    color.appendChild(option);
@@ -30,3 +32,55 @@ fetch("http://localhost:3000/api/products/" + id)
     // Une erreur est survenue
   });
 // rajouter fonction
+
+let btn_add = document.querySelector("#addToCart")
+btn_add.addEventListener("click", createProduct);
+
+// produit => [{id: , title: , quantity: , decs: }]
+function createProduct() {
+  let title = document.querySelector("#title").innerText
+  let description = document.querySelector("#description").innerText
+  let color = document.querySelector("#colors").value
+  let quantity = document.querySelector("#quantity").value
+  let product = {id: id, title: title, description: description, color: color, quantity: parseInt(quantity)}
+  let cart = localStorage.getItem("products");
+  if (product.color != "" && product.quantity > 0) {
+    if (cart == null) {
+      saveCart([product])
+    } else {
+      addToCart(product)
+    }
+  }
+  location.href = window.location.href.split("product")[0] + "cart.html"
+}
+
+function saveCart(cart) {
+  localStorage.setItem("products", JSON.stringify(cart));
+}
+
+function getCart() {
+  let cart = localStorage.getItem("products");
+  if (cart == null) {
+    return [];
+  } else {
+    return JSON.parse(cart);
+  }
+}
+
+function addToCart(product) {
+  let cart = getCart();
+  let foundProduct = cart.find(p => p.id == product.id && p.color == product.color);
+  if (foundProduct != undefined) {
+    // le produit est deja dans le panier
+    let newQuantity = parseInt(foundProduct.quantity) + product.quantity;
+    foundProduct.quantity = newQuantity;
+  } else {
+    // le produit est pas encore dans le panier
+    cart.push(product)
+  }
+  saveCart(cart);
+}
+
+
+
+
