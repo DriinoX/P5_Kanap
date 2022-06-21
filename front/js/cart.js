@@ -111,3 +111,15 @@ function removeToCart(product) {
 // comment faire un addeventlistener sur tout les select et tout les btn delete ?
 // les div ne sont pas visible par la js
 
+const test = document.querySelectorAll('.cart');
+console.log(test)
+
+const deleteItems = document.querySelectorAll('.deleteItem');
+console.log(deleteItems)
+
+deleteItems.forEach(deleteItem => {
+  deleteItem.addEventListener('click', event => {
+    console.log(deleteItems.parentNode.parentNode.parentNode.parentNode);
+  });
+});
+
