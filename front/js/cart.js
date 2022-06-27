@@ -32,16 +32,32 @@ products.forEach((product) => {
 		  <div class='cart__item__content__settings'>
 		    <div class='cart__item__content__settings__quantity'>
 		      <p>Qté : </p>
-		      <input type='number' class='itemQuantity' name='itemQuantity' min='1' max='100' value='${product.quantity}' onchange='actualisationValues()'>
+		      <input type='number' class='itemQuantity' name='itemQuantity' min='1' max='100' value='${product.quantity}'>
 		    </div>
 		    <div class='cart__item__content__settings__delete'>
-		      <p class='deleteItem' onclick='deleteProduct(this)'>Supprimer</p>
+		      <p class='deleteItem'>Supprimer</p>
 		    </div>
 		  </div>
 		</div>`
 		// ajout de l'article dans la div cart__items
 		cart__items.appendChild(cart__item)
 		displayTotalPrice(value.price, product.quantity)
+
+		// addeventlistener sur les select quantité
+		const itemQuantitys = document.querySelectorAll('.itemQuantity');
+		itemQuantitys.forEach(itemQuantity => {
+		  itemQuantity.addEventListener('change', event => {
+		    actualisationValues()
+		  });
+		});
+
+		// addeventlistener sur les btn delete
+		const deleteItems = document.querySelectorAll('.deleteItem');
+		deleteItems.forEach(deleteItem => {
+		  deleteItem.addEventListener('click', event => {
+		    deleteProduct(deleteItem)
+		  });
+		});
     });
     sumQuantity = sumQuantity + product.quantity
 });
@@ -107,19 +123,33 @@ function removeToCart(product) {
 }
 
 
-
-// comment faire un addeventlistener sur tout les select et tout les btn delete ?
-// les div ne sont pas visible par la js
-
-const test = document.querySelectorAll('.cart');
-console.log(test)
-
-const deleteItems = document.querySelectorAll('.deleteItem');
-console.log(deleteItems)
-
-deleteItems.forEach(deleteItem => {
-  deleteItem.addEventListener('click', event => {
-    console.log(deleteItems.parentNode.parentNode.parentNode.parentNode);
-  });
+// addeventlistener sur le btn order
+let btn_order = document.querySelector("#order")
+btn_order.addEventListener('click', event => {
+  actualisationLocalStorage()
+  verificationValues()
 });
 
+// Actualisation du localStorage
+function actualisationLocalStorage() {
+  let cart = getCart();
+
+  cart = cart.filter(p => p.id != product.id && p.color != product.color);
+  saveCart();
+}
+
+// verification des champs du contact
+function verificationValues() {
+	// verif nom/prenom/ville /[a-zA-Z]*/gm
+
+	// verif adresse ?
+
+	// verif email /\w*[@]\w*\.com/gm
+
+	// si toutes les verif sont passées alors appeler la fonction order
+}
+
+// envoi des infos(contact + commande) a l'API + redirection vers confirmation page avec l'id commande récuperer via la method post
+function order() {
+
+}
