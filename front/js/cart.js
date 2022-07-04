@@ -72,7 +72,6 @@ function displayTotalPrice(valuePrice, productQuantity) {
 function actualisationValues() {
 	// Calcul du total (récuperation de tout les prix)
 	let totalQuantity = document.querySelector("#totalQuantity");
-	let totalPrice = document.querySelector("#totalPrice");
 	let selectQuantitys = document.querySelectorAll(".itemQuantity")
 	sumQuantity = 0;
 	sumPrice = 0;
@@ -97,7 +96,6 @@ function actualisationValues() {
 
 function deleteProduct(element) {
 	article = element.parentNode.parentNode.parentNode.parentNode
-	console.log(article)
 	product = {id: article.dataset.id, color: article.dataset.color}
 	removeToCart(product)
 	location.href = window.location.href
@@ -119,15 +117,15 @@ function getCart() {
 function removeToCart(product) {
   let cart = getCart();
   cart = cart.filter(p => p.id != product.id && p.color != product.color);
-  saveCart();
+  saveCart(cart);
 }
 
 
 // addeventlistener sur le btn order
 let btn_order = document.querySelector("#order")
 btn_order.addEventListener('click', event => {
-  actualisationLocalStorage()
   verificationValues()
+  // actualisationLocalStorage()
 });
 
 // Actualisation du localStorage
@@ -135,16 +133,41 @@ function actualisationLocalStorage() {
   let cart = getCart();
 
   cart = cart.filter(p => p.id != product.id && p.color != product.color);
-  saveCart();
+  saveCart(cart);
 }
 
 // verification des champs du contact
 function verificationValues() {
-	// verif nom/prenom/ville /[a-zA-Z]*/gm
+	console.log('test')
+	let firstName = document.querySelector("#firstName")
+	let lastName = document.querySelector("#lastName")
+	let address = document.querySelector("#address")
+	let city = document.querySelector("#city")
+	let email = document.querySelector("#email")
 
-	// verif adresse ?
-
+	// /[a-zA-Z\-a-zA-Z]+/gm
+	let regex1 = new RegExp('/[a-zA-Z]+/gm')
 	// verif email /\w*[@]\w*\.com/gm
+	let regex2 = new RegExp('/\w*[@]\w*\.com/gm')
+	let verif1 = false
+	let verif2 = false
+	let verif3 = false
+
+	if (regex1.test(firstName.value) && regex1.test(lastName.value) && regex1.test(city.value)) {
+		verif1 = true
+	}
+
+	if (regex2.test(email.value)) {
+		verif2 = true
+	}
+
+	if (address.value != "") {
+		verif3 = true
+	}
+
+	if (verif1 && verif2 && verif3) {
+		console.log('verification OK!')
+	}
 
 	// si toutes les verif sont passées alors appeler la fonction order
 }
