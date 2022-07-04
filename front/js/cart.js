@@ -52,12 +52,14 @@ products.forEach((product) => {
 		});
 
 		// addeventlistener sur les btn delete
-		const deleteItems = document.querySelectorAll('.deleteItem');
-		deleteItems.forEach(deleteItem => {
-		  deleteItem.addEventListener('click', event => {
-		    deleteProduct(deleteItem)
+		let deleteItems = document.querySelectorAll('.deleteItem');
+		for (var i = 0; i < deleteItems.length; i++) {
+			// deleteItems = document.querySelectorAll('.deleteItem');
+			deleteItems[i].addEventListener('click', event => {
+		    	deleteProduct(deleteItems[i])
+		    	console.log(deleteItems[i])
 		  });
-		});
+		}
     });
     sumQuantity = sumQuantity + product.quantity
 });
@@ -95,10 +97,12 @@ function actualisationValues() {
 }
 
 function deleteProduct(element) {
+	console.log(element)
 	article = element.parentNode.parentNode.parentNode.parentNode
 	product = {id: article.dataset.id, color: article.dataset.color}
-	removeToCart(product)
-	location.href = window.location.href
+	console.log(product)
+	// removeToCart(product)
+	// location.href = window.location.href
 }
 
 function saveCart(cart) {
@@ -171,6 +175,9 @@ function verificationValues() {
 
 	// si toutes les verif sont passées alors appeler la fonction order
 }
+// message d'erreur direct
+
+// si un message d'erreur pas redirection avec le btn, sinon page commande
 
 // envoi des infos(contact + commande) a l'API + redirection vers confirmation page avec l'id commande récuperer via la method post
 function order() {
