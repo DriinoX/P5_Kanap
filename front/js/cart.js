@@ -267,6 +267,7 @@ btn_order.addEventListener('click', event => {
   	let cityErrorMsg = document.querySelector("#cityErrorMsg")
   	let addressErrorMsg = document.querySelector("#addressErrorMsg")
   	let emailErrorMsg = document.querySelector("#emailErrorMsg")
+  	// rajouter restriction champs vide
   	if (firstNameErrorMsg.innerText == "" && lastNameErrorMsg.innerText == "" && cityErrorMsg.innerText == "" && addressErrorMsg.innerText == "" && emailErrorMsg.innerText == "" && emailErrorMsg.innerText == "") {
   		// post la commande puis redirection avec le numero de commande du resultat
   		order()
@@ -274,6 +275,7 @@ btn_order.addEventListener('click', event => {
   		console.log("not order")
   		// location.href = window.location.href
   	}
+  	event.preventDefault()
 });
 
 // envoi des infos(contact + commande) a l'API + redirection vers confirmation page avec l'id commande récuperer via la method post
@@ -283,27 +285,31 @@ function order() {
 	let city = document.querySelector("#city")
 	let address = document.querySelector("#address")
 	let email = document.querySelector("#email")
-
-	contact = {firstName: firstName.value, lastName: lastName.value, address: address.value, city: city.value, email: email.value}
-	console.log(contact)
-	products = getCart()
-	jsonBody = [contact, products]
-	fetch("http://localhost:3000/api/products/order", {
-		method: "POST",
-		headers: { 
-	'Accept': 'application/json', 
-	'Content-Type': 'application/json' 
-	},
-		body: JSON.stringify(jsonBody)
-	})
-	.then(function(res) {
-	    if (res.ok) {
-	      return res.json();
-	    }
-	})
-    .then(function(data) {
-    	console.log(data)
-	    window.location.href = "./confirmation.html?orderId=" + data.orderId
-		
-  	});
+	if (firstName.value != "" && lastName.value != "" && address.value != "" && city.value != "" && email.value != "") {
+		contact = {firstName: firstName.value, lastName: lastName.value, address: address.value, city: city.value, email: email.value}
+		console.log(contact)
+		products = getCart()
+		id_array = []
+		products.forEach((product) => {
+			id_array.push(product.id)
+		})
+		jsonBody = [contact, id_array]
+		fetch("http://localhost:3000/api/products/order", {
+			method: "POST",
+			headers: { 
+		'Accept': 'application/json', 
+		'Content-Type': 'application/json' 
+		},
+			body: JSON.stringify(jsonBody)
+		})
+		.then(function(res) {
+		    if (res.ok) {
+		      return res.json();
+		    }
+		})
+	    .then(function(data) {
+	    	console.log(data)
+		    window.location.href = "./confirmation.html?orderId=" + data.orderId
+	  	});
+	}
 }
