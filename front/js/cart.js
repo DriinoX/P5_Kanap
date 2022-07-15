@@ -246,7 +246,7 @@ function verificationAddress(element) {
 }
 
 function verificationEmail(element) {
-	let regex1 = /\w*[@]\w*\.com/
+	let regex1 = /\w*[@]\w*\.[a-z]+/
 	let message = document.querySelector("#" + element.id + "ErrorMsg")
 	if (element.value != "") {
 		if (!regex1.test(element.value)) {
@@ -295,5 +295,15 @@ function order() {
 	'Content-Type': 'application/json' 
 	},
 		body: JSON.stringify(jsonBody)
-	});
+	})
+	.then(function(res) {
+	    if (res.ok) {
+	      return res.json();
+	    }
+	})
+    .then(function(data) {
+    	console.log(data)
+	    window.location.href = "./confirmation.html?orderId=" + data.orderId
+		
+  	});
 }
