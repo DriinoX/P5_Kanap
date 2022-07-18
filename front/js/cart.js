@@ -6,66 +6,6 @@ products = getCart()
 sumQuantity = 0;
 sumPrice = 0;
 
-// find avec tout les produit avec les present dans le panier pour les ajouter
-// products.forEach((product) => {
-
-//   fetch("http://localhost:3000/api/products/" + product.id)
-//     .then(function(res) {
-//       if (res.ok) {
-//         return res.json();
-//       }
-//     })
-//     .then(function(value) {
-//     	imageUrl = value.imageUrl
-// 		let cart__item = document.createElement("article");
-// 		cart__item.setAttribute('data-id',product.id);
-// 		cart__item.setAttribute('data-color',product.color);
-// 		cart__item.setAttribute('class','cart__item');
-// 		cart__item.innerHTML = `
-// 		<div class='cart__item__img'>
-// 		  <img src='${value.imageUrl}' alt='Photographie d'un canapé'>
-// 		</div>
-// 		<div class='cart__item__content'>
-// 		  <div class='cart__item__content__description'>
-// 		    <h2>${product.title}</h2>
-// 		    <p>${product.color}</p>
-// 		    <p>${value.price} €</p>
-// 		  </div>
-// 		  <div class='cart__item__content__settings'>
-// 		    <div class='cart__item__content__settings__quantity'>
-// 		      <p>Qté : </p>
-// 		      <input type='number' class='itemQuantity' name='itemQuantity' min='1' max='100' value='${product.quantity}'>
-// 		    </div>
-// 		    <div class='cart__item__content__settings__delete'>
-// 		      <p class='deleteItem'>Supprimer</p>
-// 		    </div>
-// 		  </div>
-// 		</div>`
-// 		// ajout de l'article dans la div cart__items
-// 		cart__items.appendChild(cart__item)
-// 		displayTotalPrice(value.price, product.quantity)
-
-// 		// addeventlistener sur les select quantité
-// 		const itemQuantitys = document.querySelectorAll('.itemQuantity');
-// 		itemQuantitys.forEach(itemQuantity => {
-// 		  itemQuantity.addEventListener('change', event => {
-// 		    actualisationValues()
-// 		  });
-// 		});
-
-// 		// addeventlistener sur les btn delete
-// 		let deleteItems = document.querySelectorAll('.deleteItem');
-// 		for (var i = 0; i < deleteItems.length; i++) {
-// 			// deleteItems = document.querySelectorAll('.deleteItem');
-// 			deleteItems[i].addEventListener('click', event => {
-// 		    	deleteProduct(deleteItems[i])
-// 		  });
-// 		}
-//     });
-//     sumQuantity = sumQuantity + product.quantity
-// });
-// totalQuantity.innerText = sumQuantity;
-
 fetch("http://localhost:3000/api/products")
 .then(function(res) {
   if (res.ok) {
@@ -113,8 +53,11 @@ fetch("http://localhost:3000/api/products")
 					  </div>
 					</div>`
 					// ajout de l'article dans la div cart__items
-					cart__items.appendChild(cart__item)
-					displayTotalPrice(value.price, product.quantity)
+					if (cart__items) {
+						cart__items.appendChild(cart__item)
+						displayTotalPrice(value.price, product.quantity)
+						displayQuantity(product.quantity)
+					}
 
 					const itemQuantitys = document.querySelectorAll('.itemQuantity');
 					itemQuantitys[index].addEventListener('change', event => {
@@ -136,6 +79,12 @@ function displayTotalPrice(valuePrice, productQuantity) {
     sumPrice = sumPrice + valuePrice * productQuantity
 	totalPrice.innerText = sumPrice;
     return sumPrice;
+}
+
+function displayQuantity(productQuantity) {
+	sumQuantity = sumQuantity + productQuantity
+	totalQuantity.innerText = sumQuantity;
+	return sumQuantity;
 }
 
 function actualisationValues() {
@@ -199,28 +148,30 @@ function actualisationLocalStorage() {
 
 // verification des champs du contact
 	// pas de chiffre dans ces champs
-let firstName = document.querySelector('#firstName');
-let lastName = document.querySelector('#lastName');
-let city = document.querySelector('#city');
-firstName.addEventListener('change', event => {
-	verificationNoNumber(firstName)
-});
-lastName.addEventListener('change', event => {
-	verificationNoNumber(lastName)
-});
-city.addEventListener('change', event => {
-	verificationNoNumber(city)
-});
-	// pas de restriction sur l'addresse
-let address = document.querySelector('#address');
-address.addEventListener('change', event => {
-	verificationAddress(address)
-});
-	// verification format de l'adresse mail
-let email = document.querySelector('#email');
-email.addEventListener('change', event => {
-	verificationEmail(email)
-});
+if (document.querySelector('#firstName')) {
+	let firstName = document.querySelector('#firstName');
+	let lastName = document.querySelector('#lastName');
+	let city = document.querySelector('#city');
+	firstName.addEventListener('change', event => {
+		verificationNoNumber(firstName)
+	});
+	lastName.addEventListener('change', event => {
+		verificationNoNumber(lastName)
+	});
+	city.addEventListener('change', event => {
+		verificationNoNumber(city)
+	});
+		// pas de restriction sur l'addresse
+	let address = document.querySelector('#address');
+	address.addEventListener('change', event => {
+		verificationAddress(address)
+	});
+		// verification format de l'adresse mail
+	let email = document.querySelector('#email');
+	email.addEventListener('change', event => {
+		verificationEmail(email)
+	});
+}
 
 function verificationNoNumber(element) {
 	let regex1 = /\d+/
@@ -260,23 +211,24 @@ function verificationEmail(element) {
 }
 
 // addeventlistener sur le btn order
-let btn_order = document.querySelector("#order")
-btn_order.addEventListener('click', event => {
-    let firstNameErrorMsg = document.querySelector("#firstNameErrorMsg")
-  	let lastNameErrorMsg = document.querySelector("#lastNameErrorMsg")
-  	let cityErrorMsg = document.querySelector("#cityErrorMsg")
-  	let addressErrorMsg = document.querySelector("#addressErrorMsg")
-  	let emailErrorMsg = document.querySelector("#emailErrorMsg")
-  	// rajouter restriction champs vide
-  	if (firstNameErrorMsg.innerText == "" && lastNameErrorMsg.innerText == "" && cityErrorMsg.innerText == "" && addressErrorMsg.innerText == "" && emailErrorMsg.innerText == "" && emailErrorMsg.innerText == "") {
-  		// post la commande puis redirection avec le numero de commande du resultat
-  		order()
-  	} else {
-  		console.log("not order")
-  		// location.href = window.location.href
-  	}
-  	event.preventDefault()
-});
+if (document.querySelector("#order")) {
+	let btn_order = document.querySelector("#order")
+	btn_order.addEventListener('click', event => {
+	    let firstNameErrorMsg = document.querySelector("#firstNameErrorMsg")
+	  	let lastNameErrorMsg = document.querySelector("#lastNameErrorMsg")
+	  	let cityErrorMsg = document.querySelector("#cityErrorMsg")
+	  	let addressErrorMsg = document.querySelector("#addressErrorMsg")
+	  	let emailErrorMsg = document.querySelector("#emailErrorMsg")
+	  	// rajouter restriction champs vide
+	  	if (firstNameErrorMsg.innerText == "" && lastNameErrorMsg.innerText == "" && cityErrorMsg.innerText == "" && addressErrorMsg.innerText == "" && emailErrorMsg.innerText == "" && emailErrorMsg.innerText == "") {
+	  		// post la commande puis redirection avec le numero de commande du resultat
+	  		order()
+	  	} else {
+	  		location.href = window.location.href
+	  	}
+	  	event.preventDefault()
+	});
+}
 
 // envoi des infos(contact + commande) a l'API + redirection vers confirmation page avec l'id commande récuperer via la method post
 function order() {
@@ -288,12 +240,12 @@ function order() {
 	if (firstName.value != "" && lastName.value != "" && address.value != "" && city.value != "" && email.value != "") {
 		contact = {firstName: firstName.value, lastName: lastName.value, address: address.value, city: city.value, email: email.value}
 		console.log(contact)
-		products = getCart()
-		id_array = []
-		products.forEach((product) => {
-			id_array.push(product.id)
+		products_local = getCart()
+		products = []
+		products_local.forEach((product) => {
+			products.push(product.id)
 		})
-		jsonBody = [contact, id_array]
+		jsonBody = {contact, products}
 		fetch("http://localhost:3000/api/products/order", {
 			method: "POST",
 			headers: { 
