@@ -265,3 +265,12 @@ function order() {
 	  	});
 	}
 }
+
+if (document.querySelector("#orderId")) {
+	displayOrderId()
+}
+
+function displayOrderId() {
+	let orderId = document.querySelector("#orderId")
+	orderId.innerText = location.href.split("orderId=")[1]
+}
