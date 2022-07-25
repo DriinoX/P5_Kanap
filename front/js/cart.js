@@ -99,7 +99,7 @@ function actualisationValues() {
 	selectQuantitys.forEach((selectQuantity) => {
 		article = selectQuantity.parentNode.parentNode.parentNode.parentNode
 		let id = article.dataset.id
-
+		let color = article.dataset.color
 		  fetch("http://localhost:3000/api/products/" + id)
 		    .then(function(res) {
 		      if (res.ok) {
@@ -108,8 +108,8 @@ function actualisationValues() {
 		    })
 		    .then(function(value) {
 		    	displayTotalPrice(value.price, selectQuantity.value)
+		    	actualisationLocalStorage({id: value._id, color: color, quantity: parseInt(selectQuantity.value)})
 		    });
-
 		sumQuantity = sumQuantity + parseInt(selectQuantity.value)
 	})
 	totalQuantity.innerText = sumQuantity
@@ -141,17 +141,15 @@ function getCart() {
 // Suppression d'un produit du LocaleStorage
 function removeToCart(product) {
   let cart = getCart();
-  console.log(cart)
   cart = cart.filter(p => p._id != product.id && p.color != product.color);
-  console.log(cart)
   saveCart(cart);
 }
 
 // Actualisation du localStorage
-function actualisationLocalStorage() {
+function actualisationLocalStorage(product) {
   let cart = getCart();
-
-  cart = cart.filter(p => p._id != product.id && p.color != product.color);
+  let foundProduct = cart.find(p => p.id == product.id && p.color == product.color);
+  foundProduct.quantity = product.quantity;
   saveCart(cart);
 }
 
@@ -248,7 +246,6 @@ function order() {
 	let email = document.querySelector("#email")
 	if (firstName.value != "" && lastName.value != "" && address.value != "" && city.value != "" && email.value != "") {
 		contact = {firstName: firstName.value, lastName: lastName.value, address: address.value, city: city.value, email: email.value}
-		console.log(contact)
 		products_local = getCart()
 		products = []
 		products_local.forEach((product) => {
@@ -269,9 +266,9 @@ function order() {
 		    }
 		})
 	    .then(function(data) {
-	    	console.log(data)
 		    window.location.href = "./confirmation.html?orderId=" + data.orderId
 	  	});
+	    localStorage.clear()
 	}
 }
 

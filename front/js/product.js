@@ -22,6 +22,7 @@ fetch("http://localhost:3000/api/products/" + id)
     title.innerText = value.name;
     price.innerText = value.price;
     description.innerText = value.description;
+    // ajout autant d'options au select que de couleurs dans l'API
     for (let i = 0; i < value.colors.length; i++) {
     	let option = document.createElement("option");
     	option.setAttribute('value', value.colors[i]);
