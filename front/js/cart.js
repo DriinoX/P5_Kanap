@@ -18,6 +18,7 @@ fetch("http://localhost:3000/api/products")
 	values.forEach((value) => {
 		id_array += value._id
 	});
+	// Affichage des produits contenu dans le LocaleStorage
 	products.forEach((product, index) => {
 		if (id_array.includes(product.id)) {
 			fetch("http://localhost:3000/api/products/" + product.id)
@@ -59,7 +60,7 @@ fetch("http://localhost:3000/api/products")
 						displayQuantity(product.quantity)
 					}
 
-					const itemQuantitys = document.querySelectorAll('.itemQuantity');
+					let itemQuantitys = document.querySelectorAll('.itemQuantity');
 					itemQuantitys[index].addEventListener('change', event => {
 					    actualisationValues()
 					});
@@ -74,19 +75,21 @@ fetch("http://localhost:3000/api/products")
 	});
 });
 
-
+// Affichage du prix total
 function displayTotalPrice(valuePrice, productQuantity) {
     sumPrice = sumPrice + valuePrice * productQuantity
 	totalPrice.innerText = sumPrice;
     return sumPrice;
 }
 
+// Affichage des quantitées total
 function displayQuantity(productQuantity) {
 	sumQuantity = sumQuantity + productQuantity
 	totalQuantity.innerText = sumQuantity;
 	return sumQuantity;
 }
 
+// Actualisation des totaux au changement de quantité d'un produit
 function actualisationValues() {
 	// Calcul du total (récuperation de tout les prix)
 	let totalQuantity = document.querySelector("#totalQuantity");
@@ -112,6 +115,7 @@ function actualisationValues() {
 	totalQuantity.innerText = sumQuantity
 }
 
+// Récuperation du produit a supprimer
 function deleteProduct(element) {
 	article = element.parentNode.parentNode.parentNode.parentNode
 	product = {id: article.dataset.id, color: article.dataset.color}
@@ -119,10 +123,12 @@ function deleteProduct(element) {
 	location.href = window.location.href
 }
 
+// Enregistrement du panier dans le LocaleStorage
 function saveCart(cart) {
   localStorage.setItem("products", JSON.stringify(cart));
 }
 
+// Récuperation du panier via le LocaleStorage
 function getCart() {
   let cart = localStorage.getItem("products");
   if (cart == null || cart == 'undefined') {
@@ -132,9 +138,12 @@ function getCart() {
   }
 }
 
+// Suppression d'un produit du LocaleStorage
 function removeToCart(product) {
   let cart = getCart();
-  cart = cart.filter(p => p.id != product.id && p.color != product.color);
+  console.log(cart)
+  cart = cart.filter(p => p._id != product.id && p.color != product.color);
+  console.log(cart)
   saveCart(cart);
 }
 
@@ -142,7 +151,7 @@ function removeToCart(product) {
 function actualisationLocalStorage() {
   let cart = getCart();
 
-  cart = cart.filter(p => p.id != product.id && p.color != product.color);
+  cart = cart.filter(p => p._id != product.id && p.color != product.color);
   saveCart(cart);
 }
 
@@ -266,10 +275,10 @@ function order() {
 	}
 }
 
+// Recuperation de l'OrderId via l'url et affichage de l'OrderId sur la page confirmation
 if (document.querySelector("#orderId")) {
 	displayOrderId()
 }
-
 function displayOrderId() {
 	let orderId = document.querySelector("#orderId")
 	orderId.innerText = location.href.split("orderId=")[1]

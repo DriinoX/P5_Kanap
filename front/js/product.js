@@ -10,6 +10,7 @@ fetch("http://localhost:3000/api/products/" + id)
     }
   })
   .then(function(value) {
+    // ajout des informations produit avec l'API
     let item_img = document.querySelector(".item__img");
     let img = document.createElement("img");
     let title = document.querySelector("#title");
@@ -31,12 +32,10 @@ fetch("http://localhost:3000/api/products/" + id)
   .catch(function(err) {
     // Une erreur est survenue
   });
-// rajouter fonction
 
+// Ajout du produit dans le panier ou création du panier si inexistant
 let btn_add = document.querySelector("#addToCart")
 btn_add.addEventListener("click", createProduct);
-
-// produit => [{id: , title: , quantity: , decs: }]
 function createProduct() {
   let title = document.querySelector("#title").innerText
   let description = document.querySelector("#description").innerText
@@ -54,10 +53,12 @@ function createProduct() {
   location.href = window.location.href.split("product")[0] + "cart.html"
 }
 
+// Enregistrement du panier dans le LocalStorage
 function saveCart(cart) {
   localStorage.setItem("products", JSON.stringify(cart));
 }
 
+// Récuperation du panier via le LocaleStorage
 function getCart() {
   let cart = localStorage.getItem("products");
   if (cart == null || cart == 'undefined') {
@@ -67,6 +68,7 @@ function getCart() {
   }
 }
 
+// Ajout d'un produit ou augmentation de la quantité si le produit est deja présent dans le panier
 function addToCart(product) {
   let cart = getCart();
   let foundProduct = cart.find(p => p.id == product.id && p.color == product.color);

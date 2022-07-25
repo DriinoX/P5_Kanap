@@ -5,6 +5,7 @@ fetch("http://localhost:3000/api/products")
     }
   })
   .then(function(value) {
+    // creation des cartes de canapé en fonction de l'API 
     for (let i = 0; i < value.length; i++) {
       let items = document.querySelector("#items");
       let a = document.createElement("a");
@@ -29,4 +30,3 @@ fetch("http://localhost:3000/api/products")
   .catch(function(err) {
     // Une erreur est survenue
   });
-// rajouter fonction
